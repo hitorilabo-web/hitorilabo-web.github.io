@@ -548,17 +548,8 @@ img { max-width: 100%; height: auto; display: block; }
     <!-- ===== 編集エリア：ヒーロー画像 =====
          画像変更 →  内の同名ファイルを上書き -->
     <div class="hero-slider" id="hero-slider">
-      <div class="slide active">
+      <div >
         <img src="images/hiro-ai-260501-1.png" alt="考える扉 ヒーロー画像1">
-      </div>
-      <div class="slide">
-        <img src="images/hiro-ai-260501-2.png" alt="考える扉 ヒーロー画像2">
-      </div>
-      <div class="slide">
-        <img src="images/hiro-ai-260501-3.png" alt="考える扉 ヒーロー画像3">
-      </div>
-      <div class="slide">
-        <img src="images/hiro-ai-260501-4.png" alt="考える扉 ヒーロー画像4">
       </div>
     </div>
 
@@ -783,20 +774,6 @@ img { max-width: 100%; height: auto; display: block; }
 </footer>
 
 <!-- ===== ヒーロースライダー JS ===== -->
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  const slides = document.querySelectorAll("#hero-slider .slide");
-  let current = 0;
-
-  function showNextSlide() {
-    slides[current].classList.remove("active");
-    current = (current + 1) % slides.length;
-    slides[current].classList.add("active");
-  }
-
-  setInterval(showNextSlide, 5000);
-});
-</script>
 
 </body>
 </html>
