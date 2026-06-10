@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>思考スタイル診断｜どの国の思考に近い？ | ひとりlabo</title>
+<meta name="description" content="毎日限りなく選択することを無意識にしています。でもこれは無意識ではなく、思考の癖です。あなたの思考スタイルは、どの国の思考に近い？">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+/* ====== 基本設計（index.htmlと共通） ====== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 400;
+  line-height: 1.8;
+  letter-spacing: 0.03em;
+  color: #222;
+  background: #fff;
+}
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; height: auto; display: block; }
+
+/* ====== ヘッダー ====== */
+.site-header {
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.site-logo img { height: 50px; width: auto; }
+.site-nav { display: flex; gap: 24px; font-size: 14px; }
+.site-nav a { color: #555; transition: color 0.2s; }
+.site-nav a:hover { color: #0097b2; }
+
+/* ====== メインコンテンツ ====== */
+.page-main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+
+/* ====== 導入テキスト ====== */
+.intro-section {
+  text-align: center;
+  margin-bottom: 12px;
+}
+.intro-section h1 {
+  font-size: clamp(22px, 5vw, 32px);
+  font-weight: 900;
+  line-height: 1.3;
+  color: #111;
+  margin-bottom: 16px;
+}
+.intro-flags {
+  font-size: clamp(16px, 4vw, 24px);
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.intro-start {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+.intro-note {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 24px;
+}
+
+/* ====== 鳥（中央） ====== */
+.tori-center {
+  text-align: center;
+  margin: 20px 0;
+}
+.tori-center img {
+  width: 80px;
+  height: auto;
+  display: inline-block;
+  animation: sway 3s ease-in-out infinite;
+}
+@keyframes sway {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+/* ====== 診断クイズ ====== */
+#tt-quiz {
+  max-width: 720px;
+  margin: 24px auto;
+  padding: 24px 20px;
+  background: #ff9ab5;
+  border-radius: 16px;
+  font-family: 'Noto Sans JP', sans-serif;
+}
+.tt-progress {
+  height: 6px;
+  background: #ffd2e1;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.tt-progress > span {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: #299ebf;
+  transition: width 0.25s ease;
+}
+.tt-q {
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1.5;
+  margin: 8px 0 12px;
+}
+.tt-opt {
+  display: block;
+  background: #fff;
+  border: 2px solid #299ebf;
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin: 8px 0;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-size: 15px;
+  line-height: 1.5;
+}
+.tt-opt:hover { background: #ffd2e1; }
+@media (hover: none) {
+  .tt-opt:hover { background: #fff; }
+}
+.tt-opt:active { background: #ffd2e1; }
+.tt-meta {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+/* ====== 結果表示 ====== */
+.result-area {
+  text-align: center;
+  animation: fadeIn 0.6s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.result-eyecatch {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto 24px;
+  border-radius: 16px;
+  overflow: hidden;
+}
+.result-eyecatch img {
+  width: 100%;
+  border-radius: 16px;
+}
+.result-subtitle {
+  font-size: clamp(16px, 4vw, 20px);
+  font-weight: 700;
+  color: #299ebf;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+.result-body {
+  font-size: 15px;
+  line-height: 2;
+  margin-bottom: 28px;
+  text-align: center;
+}
+.result-body p {
+  margin-bottom: 16px;
+}
+.result-question-heading {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.result-question {
+  font-size: 16px;
+  line-height: 1.8;
+  margin-bottom: 24px;
+  color: #333;
+}
+.result-separator {
+  width: 60px;
+  height: 2px;
+  background: #299ebf;
+  margin: 28px auto;
+  border: none;
+}
+.result-links {
+  margin-top: 32px;
+}
+.result-link-btn {
+  display: inline-block;
+  background: #299ebf;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 14px 32px;
+  border-radius: 30px;
+  margin: 8px;
+  transition: background 0.2s;
+}
+.result-link-btn:hover { background: #1a7a94; }
+.retry-btn {
+  display: inline-block;
+  background: #ff9ab5;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 12px 28px;
+  border-radius: 30px;
+  margin: 8px;
+  cursor: pointer;
+  border: none;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: background 0.2s;
+}
+.retry-btn:hover { background: #e8879e; }
+
+/* ====== 注釈 ====== */
+.quiz-credit {
+  text-align: center;
+  font-size: 13px;
+  color: #888;
+  margin-top: 20px;
+  line-height: 1.6;
+}
+
+/* ====== フッター ====== */
+.site-footer {
+  text-align: center;
+  padding: 32px 20px 24px;
+  border-top: 1px solid #eee;
+  margin-top: 40px;
+}
+.footer-logo img { height: 40px; width: auto; margin: 0 auto 8px; }
+.footer-copy { font-size: 12px; color: #999; }
+
+/* ====== レスポンシブ ====== */
+@media (max-width: 600px) {
+  .site-header { padding: 14px 16px; }
+  .site-logo img { height: 40px; }
+  .site-nav { gap: 16px; font-size: 13px; }
+  .page-main { padding: 16px 16px 48px; }
+  #tt-quiz { padding: 18px 14px; }
+  .tori-center img { width: 60px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ====== ヘッダー ====== -->
+<header class="site-header">
+  <div class="site-logo">
+    <a href="index.html"><img src="images/hitorilabo-catch.png" alt="ひとりlabo"></a>
+  </div>
+  <nav class="site-nav">
+    <a href="index.html">考える扉</a>
+    <a href="le-petit-prince/ch1-9.html">星の王子さま</a>
+    <a href="#">AIを知る</a>
+  </nav>
+</header>
+
+<!-- ====== メイン ====== -->
+<main class="page-main">
+
+  <!-- 導入 -->
+  <section class="intro-section">
+    <h1>思考スタイル診断</h1>
+    <div class="intro-flags">🇦🇺🇯🇵🇩🇪🇬🇷🇳🇱🇺🇸🇫🇷🇬🇧🇨🇭🇮🇹</div>
+    <div class="intro-start">どの国の思考スタイルに近い？</div>
+  </section>
+
+  <!-- 鳥 -->
+  <div class="tori-center">
+    <img src="images/tori-animation-1.png" alt="鳥">
+  </div>
+
+  <p class="intro-note" style="text-align:center;">質問は10問。4つの中から選んでください。</p>
+
+  <!-- 診断本体 -->
+  <div id="tt-quiz">
+    <div class="tt-progress"><span id="tt-bar"></span></div>
+    <div id="tt-meta" class="tt-meta"></div>
+    <div id="tt-q" class="tt-q"></div>
+    <div id="tt-opts"></div>
+  </div>
+
+  <div class="quiz-credit">
+    【考える扉】オリジナル診断<br>
+    簡単な選択10問に答えるだけ！<br>
+    （認知科学/心理学/脳科学に基づく）
+  </div>
+
+</main>
+
+<!-- ====== フッター ====== -->
+<footer class="site-footer">
+  <div class="footer-logo">
+    <a href="index.html"><img src="images/hitorilabo-catch.png" alt="ひとりlabo"></a>
+  </div>
+  <div class="footer-copy">&copy; ひとりlabo</div>
+</footer>
+
+<script>
+(function(){
+  // === 設問 ===
+  const Q = [
+    {q:"気になるお店を見つけたら？",
+     a:[{t:"迷わずその場で入ってみる",k:"A"},
+        {t:"外観や入っていく人を観察する",k:"B"},
+        {t:"入らず、場所だけ覚えておく",k:"C"},
+        {t:"情報やレビューを調べてみる",k:"D"}]},
+    {q:"長い待ち時間どう過ごす？",
+     a:[{t:"何もせず、無心で待つ",k:"A"},
+        {t:"スマホを見たり音楽を聴く",k:"B"},
+        {t:"メール返信や予定を整理する",k:"C"},
+        {t:"周囲の人を観察してみる",k:"D"}]},
+    {q:"初対面の人との会話は？",
+     a:[{t:"話しかけられるのを待つ",k:"A"},
+        {t:"当たり障りのない話をする",k:"B"},
+        {t:"共通点を見つけて会話を広げる",k:"C"},
+        {t:"自分から積極的に話していく",k:"D"}]},
+    {q:"新商品を見つけたら？",
+     a:[{t:"とりあえず手に取る",k:"A"},
+        {t:"気になるが通り過ぎる",k:"B"},
+        {t:"売れているか観察してみる",k:"C"},
+        {t:"何が新しいのかを調べてみる",k:"D"}]},
+    {q:"何かを買うときの基準は？",
+     a:[{t:"直感を信じて買う",k:"A"},
+        {t:"値段に納得したら買う",k:"B"},
+        {t:"本当に必要なら買う",k:"C"},
+        {t:"品質に価値があれば買う",k:"D"}]},
+    {q:"ハプニングが起きた時どうする？",
+     a:[{t:"その時の状況で分からない",k:"A"},
+        {t:"冷静さを保とうとする",k:"B"},
+        {t:"対応できることをする",k:"C"},
+        {t:"状況全体を把握する",k:"D"}]},
+    {q:"意見が対立したら？",
+     a:[{t:"相手に合わせて静観する",k:"A"},
+        {t:"その場を丸く収めるようにする",k:"B"},
+        {t:"自分の意見の一部を説明する",k:"C"},
+        {t:"相手の立場も考慮して話し合う",k:"D"}]},
+    {q:"グループ作業での行動は？",
+     a:[{t:"指示されたことを確実にやる",k:"A"},
+        {t:"気付いたことを率先してやる",k:"B"},
+        {t:"自分の担当を決めてからやる",k:"C"},
+        {t:"担当を決めて全体の指示をする",k:"D"}]},
+    {q:"道に迷ったとき？",
+     a:[{t:"とにかく歩いて探す",k:"A"},
+        {t:"近くの人にすぐ聞く",k:"B"},
+        {t:"地図アプリや案内を確認する",k:"C"},
+        {t:"人の流れや建物から推測する",k:"D"}]},
+    {q:"写真を撮るとき、理由は？",
+     a:[{t:"特に理由はなく写真を撮る習慣",k:"A"},
+        {t:"誰かに見せたときに伝わりやすいから",k:"B"},
+        {t:"何をしていたかを思い出すため",k:"C"},
+        {t:"その時に感じた感覚を忘れないため",k:"D"}]}
+  ];
+
+  // === 結果データ（10パターン） ===
+  const RESULTS = {
+    A: {
+      img: "images/eyecatch-Australia-1.png",
+      title: "あなたの思考スタイルは\n🇦🇺オーストラリア人タイプ",
+      subtitle: "自由に飛び込み、\n経験から学ぶ即断思考",
+      body: "迷ったときに頭であれこれ考えるより、\n心の声や直感に従って行動する力を持っています。\n\nその軽やかな一歩は、\nまだ誰も踏み出していない場所へと進み、\n周囲を巻き込んで\n新しい流れを生み出す強みになります。\n\n選んだ理由、行動した理由を\n説明できないこともあるでしょう。\nでも、それこそが直感の証。\n\nあなたの感覚は、\n予想もできない未来を\n切り開くエネルギーとなるでしょう。",
+      question: "あなたの直感で\n最も大切にしていることは何ですか？"
+    },
+    B: {
+      img: "images/eyecatch-Japan-2.png",
+      title: "あなたの思考スタイルは\n🇯🇵日本人タイプ",
+      subtitle: "空気を読み、\n周囲と歩調を合わせる安心思考",
+      body: "状況や周囲に素早く合わせ、\n無理のない判断を選べる柔軟さが特徴です。\n\n大きな迷いにとらわれず、\n流れに沿って進む姿勢は人を安心させ、\n場の空気を和らげる力になります。\n\n一方で、\n周りの流れに偏ると、\n自分の気持ちや心の声を\n見過ごしてしまうこともあります。\n\n心の声に耳を傾けると\n日常に新しい発見が増えるでしょう。",
+      question: "最近、\n空気を読んだのは\nどんな場面でしたか？"
+    },
+    C: {
+      img: "images/eyecatch-Germany-3.png",
+      title: "あなたの思考スタイルは\n🇩🇪ドイツ人タイプ",
+      subtitle: "物事を整理し、\n効率よく進める堅実思考",
+      body: "自分の手の届く範囲をきちんと整理し、\n現実的な計画や方法を\n選んで歩んできました。\n\nその姿勢は「着実さ」という力になり、\n周囲からの信頼を集めます。\n\n一度に多くのことを広げるよりも、\nできることをしっかり形にする。\nその誠実さは強さでもあり、\n人と人をつなぐ基盤にもなります。\n\nただ、視野が狭まりすぎると\n大切な機会を見逃すことも。\n\n今ある視野の外へも問いを広げてみましょう。",
+      question: "最近、予定を立てずに\n行動をしたのはいつですか？"
+    },
+    D: {
+      img: "images/eyecatch-Greece-4.png",
+      title: "あなたの思考スタイルは\n🇬🇷ギリシャ人タイプ",
+      subtitle: "背景を深く考え、\n多角的に捉える探究思考",
+      body: "物事を深く掘り下げ、\nその背景や意味を\n探ろうとする力を持っています。\n\n自分の考えを俯瞰しつつ、\n他者の立場にも目を向けられるため、\n全体をつなぎ合わせるような\n洞察を生み出します。\n\nその姿勢は周囲に新しい視点を与え、\n考えることの価値を広げていきます。\n\n深さに没頭するあまり\n歩みが遅くなることもありますが、\n着実に進んでいます。\n\n問いを重ねることが、\n唯一無二を生み出す発見へとつながります。",
+      question: "あなたにとって答えのない問いを\n抱え続けることは\nどういう感覚ですか？"
+    },
+    AB: {
+      img: "images/eyecatch-Olanda-5.png",
+      title: "あなたの思考スタイルは\n🇳🇱オランダ人タイプ",
+      subtitle: "直感で動きながら、\n人との調和も大切にする柔軟思考",
+      body: "直感で動く力と、\nわかりやすさを優先する感覚、\nその両方を持っています。\n\nときに衝動的に、\nときに人に合わせながら、\n柔軟に立ち回れるのが強みです。\n２面をうまく調和して出せるのが\n特徴です。\n\nただ、自分の「核」となる意志が\n見えにくくなる瞬間もあるかもしれません。\n\nそんなときは、\n少し俯瞰して自分を見つめてみましょう。\nそれだけで、\nあなたの行動に深みが加わります。",
+      question: "今のあなたの『譲れないもの』は、\n言葉にすると何ですか？"
+    },
+    AC: {
+      img: "images/eyecatch-uca-6.png",
+      title: "あなたの思考スタイルは\n🇺🇸アメリカ人タイプ",
+      subtitle: "チャレンジ精神と\n仕組みづくりを両立する実践思考",
+      body: "即断の力と、\n計画を立てる安定感、\nその両方を使い分けています。\n\n勢いで進むときもあれば、\n地に足をつけて確実に\n積み上げるときもある。\n\nそのバランスは、\n挑戦と堅実を同時に\n兼ね備える大きな力です。\n\nただし、どちらに振れるかで\n迷うこともあるでしょう。\n\nそんなときは問いを一つ持ってみること。\n直感と構造、両方の強みを\n活かす道が見えてきます。",
+      question: "あなたの今の選択は、\n10年後のあなたをどう変えるでしょうか？"
+    },
+    AD: {
+      img: "images/eyecatch-_France-7.png",
+      title: "あなたの思考スタイルは\n🇫🇷フランス人タイプ",
+      subtitle: "ひらめきを行動に変え、\n同時に意味を問い直す創造思考",
+      body: "素早い決断と、深い意味づけ。\nその両極を合わせ持つ存在です。\n\n表面的には相反して見えますが、\nこの組み合わせは\n新しい発想を生む大きな力。\n\n時に直感が暴走し、\n時に洞察が慎重すぎることもありますが、\n互いに補い合うことで\n独自の価値をつくります。\n\n直感と洞察は、\n未来を切り開く最強の二刀流です。",
+      question: "最近、\nあなたが迷ったことは、\n何ですか？"
+    },
+    BC: {
+      img: "images/eyecatch-England-8.png",
+      title: "あなたの思考スタイルは\n🇬🇧イギリス人タイプ",
+      subtitle: "伝統を守りつつ、\n周囲と調和して進める安定思考",
+      body: "周りに合わせて秩序を重んじ、\n着実に整理して進む姿勢、\nその両方を持っています。\n\nだからこそ周囲と調和しながらも、\n堅実に物事を形にできます。\n\nただ、安定を選択しすぎて、\n気がつけば守りに入り\n出遅れてしまうことがあるでしょう。\n\n視野を広げて大きな枠で\n見渡して少し挑戦することが\nあなたの進化になります。",
+      question: "あなたにとって安心とは\n守ることですか？"
+    },
+    BD: {
+      img: "images/eyecatch-Swiss-9.png",
+      title: "あなたの思考スタイルは\n🇨🇭スイス人タイプ",
+      subtitle: "周囲に合わせながら、\n心の深さを重んじる温和思考",
+      body: "気楽に動ける柔らかさと、\n意味を探ろうとする洞察力。\nその両方が自然に備わっています。\n\nあなたの選択は派手ではなくとも、\nじわじわと周囲に\n信頼と安心を広げていく。\n\nその柔軟さと静けさを\n意識するだけで、\n人と人の間に\n新しい視点を生み出します。",
+      question: "あなたの安心と安全は、\nどこから与えられていますか？"
+    },
+    CD: {
+      img: "images/eyecatch-Italia-10.png",
+      title: "あなたの思考スタイルは\n🇮🇹イタリア人タイプ",
+      subtitle: "秩序を築きつつ、\n本質や歴史の流れを大切にする洞察思考",
+      body: "計画的に整理する力と、\n多角的に意味を見出す力。\nこの組み合わせは、\n物事を着実に進めながら、\nその本質を掘り下げるという\n希少なスタイルです。\n\n慎重さと深さが融合することで、\n誰も気づかない価値を実現できます。\n\nただ、考え込みすぎて\n動けなくなることもあるかもしれません。\nそんなときは小さな一歩を\n踏み出すことが鍵になります。",
+      question: "あなたの信じていることは、\n言葉にできることですか？"
+    }
+  };
+
+  const $=sel=>document.querySelector(sel);
+  const shuffle=arr=>{const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+
+  let i=0;
+  const total=Q.length;
+  const score={A:0,B:0,C:0,D:0};
+  const answers=[];
+
+  function render(){
+    const meta=$('#tt-meta'), qel=$('#tt-q'), opts=$('#tt-opts'), bar=$('#tt-bar');
+    const now=i+1;
+    meta.textContent='質問 '+now+' / '+total;
+    bar.style.width=Math.round(now/total*100)+'%';
+    qel.textContent=Q[i].q;
+    opts.innerHTML='';
+    shuffle(Q[i].a).forEach(function(item){
+      const d=document.createElement('div');
+      d.className='tt-opt';
+      d.textContent=item.t;
+      d.onclick=function(){
+        score[item.k]++;
+        answers.push(item.k);
+        i++;
+        if(i<total){
+          render();
+          window.scrollTo({top:document.getElementById('tt-quiz').offsetTop-10,behavior:'smooth'});
+        } else {
+          finish();
+        }
+      };
+      opts.appendChild(d);
+    });
+  }
+
+  // === 判定 ===
+  function finish(){
+    const max=Math.max(score.A,score.B,score.C,score.D);
+    const tied=Object.keys(score).filter(function(k){return score[k]===max;}).sort();
+    let destKey;
+
+    if(tied.length===1){
+      destKey=tied[0];
+    } else if(tied.length===2){
+      destKey=(tied[0]+tied[1]).toUpperCase();
+    } else {
+      const priority=[0,1,2];
+      let chosen=null;
+      for(let idx=0;idx<priority.length;idx++){
+        if(answers[priority[idx]] && tied.indexOf(answers[priority[idx]])!==-1){
+          chosen=answers[priority[idx]];
+          break;
+        }
+      }
+      if(!chosen) chosen=tied[0];
+      const others=tied.filter(function(k){return k!==chosen;}).sort();
+      destKey=(chosen+others[0]).toUpperCase();
+    }
+
+    const result=RESULTS[destKey]||RESULTS.A;
+    showResult(result);
+  }
+
+  // === 結果表示 ===
+  function showResult(r){
+    const quiz=$('#tt-quiz');
+    const nl2br=function(s){return s.replace(/\n/g,'<br>');};
+
+    quiz.style.background='transparent';
+    quiz.style.padding='0';
+    quiz.innerHTML=
+      '<div class="result-area">'+
+        '<div class="result-eyecatch"><img src="'+r.img+'" alt="結果"></div>'+
+        '<div class="result-subtitle">'+nl2br(r.subtitle)+'</div>'+
+        '<div class="result-body">'+
+          nl2br(r.body)+
+        '</div>'+
+        '<hr class="result-separator">'+
+        '<div class="result-question-heading">あなたへの問い</div>'+
+        '<div class="result-question">'+nl2br(r.question)+'</div>'+
+        '<hr class="result-separator">'+
+        '<div class="result-links">'+
+          '<a href="check2.html" class="result-link-btn">思考モード診断へ</a><br>'+
+          '<button class="retry-btn" onclick="location.reload()">もう一度診断する</button>'+
+        '</div>'+
+      '</div>';
+
+    // 結果位置までスクロール
+    window.scrollTo({top:quiz.offsetTop-20,behavior:'smooth'});
+
+    // クレジット非表示
+    var credit=document.querySelector('.quiz-credit');
+    if(credit) credit.style.display='none';
+  }
+
+  document.addEventListener('DOMContentLoaded',render);
+})();
+</script>
+
+</body>
+</html>

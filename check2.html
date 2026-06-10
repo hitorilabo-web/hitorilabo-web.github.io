@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>思考モード診断｜思考回路は直線？並列？ | ひとりlabo</title>
+<meta name="description" content="あなたの思考回路（モード）を診断します。直線思考か並列思考か。8つの質問に答えるだけ。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+/* ====== 基本設計（index.htmlと共通） ====== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 400;
+  line-height: 1.8;
+  letter-spacing: 0.03em;
+  color: #222;
+  background: #fff;
+}
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; height: auto; display: block; }
+
+/* ====== ヘッダー ====== */
+.site-header {
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.site-logo img { height: 50px; width: auto; }
+.site-nav { display: flex; gap: 24px; font-size: 14px; }
+.site-nav a { color: #555; transition: color 0.2s; }
+.site-nav a:hover { color: #0097b2; }
+
+/* ====== メインコンテンツ ====== */
+.page-main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+
+/* ====== 導入テキスト ====== */
+.intro-section {
+  text-align: center;
+  margin-bottom: 12px;
+}
+.intro-section h1 {
+  font-size: clamp(22px, 5vw, 32px);
+  font-weight: 900;
+  line-height: 1.3;
+  color: #111;
+  margin-bottom: 16px;
+}
+.intro-start {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+.intro-note {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 24px;
+}
+
+/* ====== 鳥（中央） ====== */
+.tori-center {
+  text-align: center;
+  margin: 20px 0;
+}
+.tori-center img {
+  width: 80px;
+  height: auto;
+  display: inline-block;
+  animation: sway 3s ease-in-out infinite;
+}
+@keyframes sway {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+/* ====== 診断クイズ（check2配色） ====== */
+#tt-quiz {
+  max-width: 720px;
+  margin: 24px auto;
+  padding: 24px 20px;
+  background: #99dfec;
+  border-radius: 16px;
+  font-family: 'Noto Sans JP', sans-serif;
+}
+.tt-progress {
+  height: 6px;
+  background: #daf7ff;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.tt-progress > span {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: #f98fac;
+  transition: width 0.25s ease;
+}
+.tt-q {
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1.5;
+  margin: 8px 0 12px;
+}
+.tt-opt {
+  display: block;
+  background: #fff;
+  border: 2px solid #f98fac;
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin: 8px 0;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-size: 15px;
+  line-height: 1.5;
+}
+.tt-opt:hover { background: #daf7ff; }
+@media (hover: none) {
+  .tt-opt:hover { background: #fff; }
+}
+.tt-opt:active { background: #daf7ff; }
+.tt-meta {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+/* ====== 結果表示 ====== */
+.result-area {
+  text-align: center;
+  animation: fadeIn 0.6s ease;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.result-eyecatch {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto 24px;
+  border-radius: 16px;
+  overflow: hidden;
+}
+.result-eyecatch img {
+  width: 100%;
+  border-radius: 16px;
+}
+.result-subtitle {
+  font-size: clamp(16px, 4vw, 20px);
+  font-weight: 700;
+  color: #f98fac;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+.result-body {
+  font-size: 15px;
+  line-height: 2;
+  margin-bottom: 28px;
+  text-align: center;
+}
+.result-body p {
+  margin-bottom: 16px;
+}
+.result-question-heading {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.result-question {
+  font-size: 16px;
+  line-height: 1.8;
+  margin-bottom: 24px;
+  color: #333;
+}
+.result-separator {
+  width: 60px;
+  height: 2px;
+  background: #f98fac;
+  margin: 28px auto;
+  border: none;
+}
+.result-links {
+  margin-top: 32px;
+}
+.result-link-btn {
+  display: inline-block;
+  background: #f98fac;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 14px 32px;
+  border-radius: 30px;
+  margin: 8px;
+  transition: background 0.2s;
+}
+.result-link-btn:hover { background: #e87799; }
+.retry-btn {
+  display: inline-block;
+  background: #99dfec;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 12px 28px;
+  border-radius: 30px;
+  margin: 8px;
+  cursor: pointer;
+  border: none;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: background 0.2s;
+}
+.retry-btn:hover { background: #7bcfdd; }
+
+/* ====== 注釈 ====== */
+.quiz-credit {
+  text-align: center;
+  font-size: 13px;
+  color: #888;
+  margin-top: 20px;
+  line-height: 1.6;
+}
+
+/* ====== フッター ====== */
+.site-footer {
+  text-align: center;
+  padding: 32px 20px 24px;
+  border-top: 1px solid #eee;
+  margin-top: 40px;
+}
+.footer-logo img { height: 40px; width: auto; margin: 0 auto 8px; }
+.footer-copy { font-size: 12px; color: #999; }
+
+/* ====== レスポンシブ ====== */
+@media (max-width: 600px) {
+  .site-header { padding: 14px 16px; }
+  .site-logo img { height: 40px; }
+  .site-nav { gap: 16px; font-size: 13px; }
+  .page-main { padding: 16px 16px 48px; }
+  #tt-quiz { padding: 18px 14px; }
+  .tori-center img { width: 60px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ====== ヘッダー ====== -->
+<header class="site-header">
+  <div class="site-logo">
+    <a href="index.html"><img src="images/hitorilabo-catch.png" alt="ひとりlabo"></a>
+  </div>
+  <nav class="site-nav">
+    <a href="index.html">考える扉</a>
+    <a href="le-petit-prince/ch1-9.html">星の王子さま</a>
+    <a href="#">AIを知る</a>
+  </nav>
+</header>
+
+<!-- ====== メイン ====== -->
+<main class="page-main">
+
+  <!-- 導入 -->
+  <section class="intro-section">
+    <h1>思考モード診断</h1>
+    <div class="intro-start">思考回路は直線？並列？</div>
+  </section>
+
+  <!-- 鳥 -->
+  <div class="tori-center">
+    <img src="images/tori-animation-3.png" alt="鳥">
+  </div>
+
+  <p class="intro-note" style="text-align:center;">🧠質問は8問。3つの中から選んでください。</p>
+
+  <!-- 診断本体 -->
+  <div id="tt-quiz">
+    <div class="tt-progress"><span id="tt-bar"></span></div>
+    <div id="tt-meta" class="tt-meta"></div>
+    <div id="tt-q" class="tt-q"></div>
+    <div id="tt-opts"></div>
+  </div>
+
+  <div class="quiz-credit">
+    【考える扉】オリジナル診断<br>
+    簡単な選択8問に答えるだけ！<br>
+    （認知科学/心理学/脳科学に基づく）
+  </div>
+
+</main>
+
+<!-- ====== フッター ====== -->
+<footer class="site-footer">
+  <div class="footer-logo">
+    <a href="index.html"><img src="images/hitorilabo-catch.png" alt="ひとりlabo"></a>
+  </div>
+  <div class="footer-copy">&copy; ひとりlabo</div>
+</footer>
+
+<script>
+(function(){
+  // === 設問（v:0=直線寄り, v:1=中間, v:2=並列寄り） ===
+  const Q = [
+    {q:"料理をするときの進め方は？",
+     a:[{t:"作る料理を決めてレシピ通り進める",v:0},
+        {t:"工程ごとに段取りよく進める",v:1},
+        {t:"複数のメニューを同時に進める",v:2}]},
+    {q:"旅行の準備の段取りは？",
+     a:[{t:"荷造りをしてから細かい日程を決める",v:0},
+        {t:"日程を決めてから荷造りをする",v:1},
+        {t:"日程確認をしながら荷造りをする",v:2}]},
+    {q:"スーパーへ買い物に行ったら？",
+     a:[{t:"目的のものだけを買う",v:0},
+        {t:"あらかじめリストにして買う",v:1},
+        {t:"必要なものと特価をチェックして買う",v:2}]},
+    {q:"本を読むときのスタイルは？",
+     a:[{t:"1冊を決めて最後まで読み切る",v:0},
+        {t:"何冊か並行して読む",v:1},
+        {t:"ジャンルの違う本を並行に読む",v:2}]},
+    {q:"調べ物をするときは？",
+     a:[{t:"1つの情報源に集中して読む",v:0},
+        {t:"複数の情報源を並べて比較する",v:1},
+        {t:"調べながら深掘りする",v:2}]},
+    {q:"テレビや動画を見るとき？",
+     a:[{t:"番組を最初から最後まで集中して見る",v:0},
+        {t:"いくつかの番組を切り替えながら見る",v:1},
+        {t:"何か他のことをしながら見る",v:2}]},
+    {q:"引っ越し先を選ぶ基準は？",
+     a:[{t:"直感で気に入った物件",v:0},
+        {t:"複数の候補をじっくり比較して決める",v:1},
+        {t:"条件や環境を総合的に考えて選ぶ",v:2}]},
+    {q:"予定のない休日の過ごし方は？",
+     a:[{t:"やることを1つ決めてやるor何もしない",v:0},
+        {t:"やることを決めて順番をつけてやる",v:1},
+        {t:"やることを頭に置いて気分に任せる",v:2}]}
+  ];
+
+  // === 結果データ（5パターン：スコア0-16を5段階で分岐） ===
+  const RESULTS = [
+    {min:0, max:3,
+     img:"images/eyecatch-11linear.png",
+     title:"あなたの思考モードは\n完全直線思考タイプ",
+     subtitle:"脇見せずまっすぐ前を見て、\n決めたことを順序よく進める",
+     body:"あなたは脇見せずまっすぐ前を見て、\n決めたことを順序よく進める力があります。\n迷わず進める分、達成感を得やすく、\n周囲からも信頼されやすいでしょう。\n\nただし視野が狭まりやすく、\n他の可能性を切り捨ててしまう危険もあります。\n小さな寄り道や比較対象を\n意識的に取り入れると、\n新しい気づきが広がります。",
+     question:"あなたの目の前には、\n何本の道が広がっていますか？"},
+    {min:4, max:6,
+     img:"images/eyecatch-12linear-plus.png",
+     title:"あなたの思考モードは\n直線思考優勢タイプ",
+     subtitle:"秩序や順序を大切にしながらも、\nときに柔軟に動くことができる",
+     body:"あなたは秩序や順序を大切にしながらも、\nときに柔軟に動くことができます。\n安定感と効率の良さがあり、\n現実的な判断をしやすいモードです。\n\nただし「ちょっとした柔軟さ」が\n逆に迷いとなることもあります。\n思い切って一度だけ\n「別ルート」を試してみると、\n自分の直線の強さがより\n活きてくるはずです。",
+     question:"あなたが迷う時は、\nどんな場面が多いですか？"},
+    {min:7, max:9,
+     img:"images/eyecatch-13mix.png",
+     title:"あなたの思考モードは\n直線50 並列50タイプ",
+     subtitle:"状況に応じて\n直線にも並列にも切り替えられるバランス型",
+     body:"あなたは状況に応じて\n直線にも並列にも\n切り替えられるバランス型です。\n周囲と協調しやすく、\n複数の価値観を\n受け入れられる強みがあります。\n\nただし「どちらでもできる」がゆえに、\n選択が遅くなったり迷いが\n増えることもあります。\n\nときには意図的に\n「今は直線」「今は並列」と\n自分でモードを切り替えてみましょう。",
+     question:"直線思考と並列思考の違いを\n説明できますか？"},
+    {min:10, max:13,
+     img:"images/eyecatch-14parallel-plus.png",
+     title:"あなたの思考モードは\n並列思考優位タイプ",
+     subtitle:"複数のことを関連づけながら考え、\n横のつながりから発見を生む",
+     body:"あなたは複数のことを\n関連づけながら考え、\n横のつながりから発見を生む力があります。\n比較や多角的な視点に強く、\n複雑さを味方につけるタイプです。\n\nただし情報が散らかりやすく、\nまとまりを欠くこともあります。\n意識的に「仮の直線」を1本決め、\nその軸をもとに並列を\n展開すると深まりが出ます。",
+     question:"複数のことを横並びに置く感覚は、\n自然に起こることですか？"},
+    {min:14, max:16,
+     img:"images/eyecatch-15parallel.png",
+     title:"あなたの思考モードは\n完全並列思考タイプ",
+     subtitle:"複雑さをそのまま扱い、\n違いの中から本質を浮かび上がらせる",
+     body:"あなたは複雑さをそのまま扱い、\n違いの中から本質を浮かび上がらせることが\nできるタイプです。\n多様性や対比を自然に受け入れ、\nそこから新しい価値を見つけ出します。\n\nただし周囲には伝わりにくく、\n「何を考えているかわからない」と\n思われることもあるでしょう。\n自分の中の複雑さを一時的に整理し、\n人に見える形で示す工夫が大切です。",
+     question:"一つのことを考える時\n横に並べる感覚か、縦に積み上げる感覚の\nどちらが近いですか？"}
+  ];
+
+  const $=sel=>document.querySelector(sel);
+  const shuffle=arr=>{const a=arr.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+
+  let i=0;
+  const total=Q.length;
+  let totalScore=0;
+
+  function render(){
+    const meta=$('#tt-meta'), qel=$('#tt-q'), opts=$('#tt-opts'), bar=$('#tt-bar');
+    const now=i+1;
+    meta.textContent='質問 '+now+' / '+total;
+    bar.style.width=Math.round(now/total*100)+'%';
+    qel.textContent=Q[i].q;
+    opts.innerHTML='';
+    shuffle(Q[i].a).forEach(function(item){
+      const d=document.createElement('div');
+      d.className='tt-opt';
+      d.textContent=item.t;
+      d.onclick=function(){
+        totalScore+=item.v;
+        i++;
+        if(i<total){
+          render();
+          window.scrollTo({top:document.getElementById('tt-quiz').offsetTop-10,behavior:'smooth'});
+        } else {
+          finish();
+        }
+      };
+      opts.appendChild(d);
+    });
+  }
+
+  // === 判定 ===
+  function finish(){
+    const result=RESULTS.find(function(r){return totalScore>=r.min && totalScore<=r.max;});
+    if(result){
+      showResult(result);
+    } else {
+      showResult(RESULTS[2]);
+    }
+  }
+
+  // === 結果表示 ===
+  function showResult(r){
+    const quiz=$('#tt-quiz');
+    const nl2br=function(s){return s.replace(/\n/g,'<br>');};
+
+    quiz.style.background='transparent';
+    quiz.style.padding='0';
+    quiz.innerHTML=
+      '<div class="result-area">'+
+        '<div class="result-eyecatch"><img src="'+r.img+'" alt="結果"></div>'+
+        '<div class="result-subtitle">'+nl2br(r.subtitle)+'</div>'+
+        '<div class="result-body">'+
+          nl2br(r.body)+
+        '</div>'+
+        '<hr class="result-separator">'+
+        '<div class="result-question-heading">あなたへの問い</div>'+
+        '<div class="result-question">'+nl2br(r.question)+'</div>'+
+        '<hr class="result-separator">'+
+        '<div class="result-links">'+
+          '<a href="check1.html" class="result-link-btn">思考スタイル診断へ</a><br>'+
+          '<button class="retry-btn" onclick="location.reload()">もう一度診断する</button>'+
+        '</div>'+
+      '</div>';
+
+    window.scrollTo({top:quiz.offsetTop-20,behavior:'smooth'});
+
+    var credit=document.querySelector('.quiz-credit');
+    if(credit) credit.style.display='none';
+  }
+
+  document.addEventListener('DOMContentLoaded',render);
+})();
+</script>
+
+</body>
+</html>
